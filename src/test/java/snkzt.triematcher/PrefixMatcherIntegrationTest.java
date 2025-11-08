@@ -1,4 +1,4 @@
-package com.example.triematcher;
+package snkzt.triematcher;
 
 import org.junit.jupiter.api.Test;
 import java.nio.file.Files;
@@ -16,7 +16,7 @@ public class PrefixMatcherIntegrationTest {
         PrefixMatcher matcher = new PrefixMatcher(prefixes);
 
         // Example test
-        assertEquals("KAWeq", matcher.findLongestPrefix("KAWeqXYZ"));
+        assertEquals("KAWeqI", matcher.findLongestPrefix("KAWeqIXYZ"));
         assertNull(matcher.findLongestPrefix("zzzzzz"));
     }
 }

@@ -13,7 +13,7 @@ public class PrefixMatcher {
 
     private final PrefixTrie trie;
 
-    public PrefixMatcher(List prefixes) {
+    public PrefixMatcher(List<String> prefixes) {
         this.trie = new PrefixTrie(prefixes); // build trie at construction
         logger.info("PrefixMatcher initialized with {} prefixes", prefixes.size());
     }
