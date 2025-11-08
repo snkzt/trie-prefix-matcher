@@ -20,9 +20,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         // Prefix file path (can be made configurable via env or system properties if needed)
-        // Path prefixFile = Path.of("src/main/resources/sample_prefixes.txt");
-        // List prefixes = PrefixConfigLoader.loadFromFile(prefixFile);
-        // logger.info("Loaded {} prefixes from {}", prefixes.size(), prefixFile);
+        Path prefixFile = Path.of("src/main/resources/sample_prefixes.txt");
+        List prefixes = PrefixConfigLoader.loadFromFile(prefixFile);
+        logger.info("Loaded {} prefixes from {}", prefixes.size(), prefixFile);
 
         PrefixMatcher matcher = new PrefixMatcher(prefixes);
 
