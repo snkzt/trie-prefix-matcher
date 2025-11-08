@@ -22,7 +22,6 @@ public class Main {
         // Prefix file path (can be made configurable via env or system properties if needed)
         Path prefixFile = Path.of("src/main/resources/sample_prefixes.txt");
         List<String> prefixes = PrefixConfigLoader.loadFromFile(prefixFile);
-        logger.info("Loaded {} prefixes from {}", prefixes.size(), prefixFile);
 
         PrefixMatcher matcher = new PrefixMatcher(prefixes);
 
@@ -42,7 +41,7 @@ public class Main {
 
         for (String input : inputs) {
             String result = matcher.findLongestPrefix(input);
-            logger.info("input={} -> longestPrefix={}", input, result);
+            System.out.printf("%s -> %s%n", input, result);
         }   
     }
 }
