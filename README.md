@@ -31,19 +31,16 @@ The provided sample prefixes are **alphanumeric** only:
 ### Implications
 - Trie uses Map<Character, TrieNode> to efficiently handle the 62-character alphanumeric space.
 - The structure is mutable during construction, but functionally immutable once built — ensuring thread-safe, read-only lookups.
-- No special handling or Unicode normalization is required.
+- No special handling or Unicode normalisation is required.
 
-### Memory Optimization Note
+### Memory Optimisation Note
 For known alphanumeric character sets, a more memory-efficient implementation could store child nodes in a compact array of size 62 instead of a HashMap.
 However, for the current dataset (~264k prefixes), using a HashMap is sufficient and provides a good balance of readability, maintainability and performance.
 
 ### Extending for more character types
 If prefixes or inputs include punctuation, Unicode, or spaces:
 1. No code change is strictly required (Java `char` supports Unicode).
-2. For large Unicode sets, consider the following:
-   - Using `TreeMap<Character, Node>` for ordered traversal.
-   - Adding normalization (e.g. `Normalizer` for UTF-8).
-   - Preprocessing input (e.g., using Normalizer for UTF-8) to reduce character diversity.
+2. For large or highly varied Unicode sets, consider normalising inputs with `java.text.Normalizer` or other pre-processing steps, and ensure the data structure (e.g., switching to `TreeMap`) still meets your ordering or performance needs.
 3. For extremely multilingual datasets, review performance (larger branching factor).
 The current PrefixTrie is fully optimised for alphanumeric datasets but can be easily adapted for wider character sets if needed.
 4. The prefix list is loaded from the classpath resource `sample_prefixes.txt` (located in `src/main/resources/` at build time). Both inputs and prefixes are loaded from classpath resources, which works both in development and when running from a JAR. They could be made configurable using environment variables or system properties in a production deployment.
@@ -99,7 +96,7 @@ When to run:
 # Windows
 mvnw.cmd test
 ```
-This command compiles the code and runs all unit and integration tests. Note that `./mvnw -q clean package` (section 1) also runs tests as part of the build process.
+This command compiles the code and runs all unit and integration tests. Note that `./mvnw -q clean package` (section Build the JAR) also runs tests as part of the build process.
 
 ### Run the JAR
 The `Main.java` class can read input strings in two ways:
