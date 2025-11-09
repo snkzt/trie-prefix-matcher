@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -29,7 +30,7 @@ public final class PrefixConfigLoader {
             throw new IOException("Prefix resource not found: " + resourcePath);
         }
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             Stream<String> lines = reader.lines()) {
             List<String> prefixes = lines.map(String::trim)
                                     .filter(s -> !s.isEmpty())
@@ -49,7 +50,7 @@ public final class PrefixConfigLoader {
             throw new IOException("Prefix file not found: " + path);
         }
 
-        try (var lines = Files.lines(path)) {
+        try (var lines = Files.lines(path, StandardCharsets.UTF_8)) {
             List<String> prefixes = lines.map(String::trim)
                                     .filter(s -> !s.isEmpty())
                                     .collect(Collectors.toList());

@@ -55,12 +55,13 @@ The current PrefixTrie is fully optimised for alphanumeric datasets but can be e
 | --- | --- | --- |
 | Algorithmic correctness & performance | Trie ensures O(L) lookup | Efficient for large prefix sets (~264k prefixes), avoids linear scans over the prefix list for each query |
 | Separation of concerns | Loader, Matcher, Trie, and Main are separate classes | Improves maintainability, testability, and makes code easier to extend |
-| Thread-safety & immutability | Trie is immutable after construction; PrefixMatcher delegates to it | Safe for concurrent access without locks; predictable behaviour; multiple threads can safely call `findLongestPrefix` |
-| Concurrency handling | Trie insertion occurs only in constructor; read-only thereafter | Ensures no race conditions; no synchronization overhead needed |
+| Thread-safety & immutability | Trie nodes are frozen with `Map.copyOf` after construction; PrefixMatcher only exposes read operations | Immutability enforced at runtime, so concurrent lookups are safe and accidental mutations fail fast |
+| Concurrency handling | Trie is built once in the constructor and then read-only | Eliminates the need for locks while guaranteeing deterministic behaviour |
 | Logging & debugging | SLF4J logging added for construction metrics and file loads | Provides visibility into the system while keeping production logs clean and optional |
 | Simplicity & readability | Small, focused methods and concise classes | Easier to read, reason about, and maintain; aligns with KISS principle |
-| Testability | Unit & integration tests using JUnit 5 | Covers expected behaviour, edge cases (null/empty inputs), and integration with file-based configuration |
-| Error handling | Null and empty checks, skipped empty lines in config loader | Ensures robust and predictable behaviour, avoids runtime exceptions |
+| Testability | Unit & integration tests using JUnit 5 | Covers expected behaviour, edge cases (null/empty inputs), CLI formatting, and configuration loading |
+| Error handling | Configuration loaders trim blanks and force UTF-8; CLI outputs `(empty)` or “Matching prefix not found” for clarity | Handles malformed data gracefully and keeps user-facing output explicit |
+| CI automation | GitHub Actions workflow runs `./mvnw test` on pushes/PRs | Guarantees remote validation of every change before merge |
 | Packaging | Standard Maven project layout | Simplifies build, test, and deployment; compatible with CI/CD pipelines |
 
 
@@ -124,15 +125,18 @@ java -jar target/trie-prefix-matcher-1.0.0.jar
 =================== Prefix Match Results ===================
 Input                | Longest Matching Prefix
 ------------------------------------------------------------
-KAWeqIXYZ            | KAWeqI
 truecaller           | truecal
-fooBar               | null
-unknown              | null
+(empty)              | null
+KT528oxLERGI         | KT528oxL
+fooBar               | Matching prefix not found
+unknown              | Matching prefix not found
+KAWeqIXYZ            | KAWeqI
 ============================================================
 ```
 
 ***Notes:***
 - Clean output (no Maven messages) - only essential results are printed
+- Non-empty inputs with no match render `Matching prefix not found`; empty strings appear as `(empty)` for readability
 - All dependencies are included in the JAR - only Java is required at runtime
 - For very large input sets, redirect output to a file:
     ```

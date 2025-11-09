@@ -41,12 +41,12 @@ public class Main {
         System.out.println("------------------------------------------------------------");
 
         for (String input : inputs) {
-            // Skip empty strings as they have no meaningful prefix to match
-            if (input == null || input.isEmpty()) {
-                continue;
-            }
+            String displayValue = input == null ? "(null)" : input.isEmpty() ? "(empty)" : input;
             String result = matcher.findLongestPrefix(input);
-            System.out.printf("%-20s | %s%n", input, result);
+            String outputValue = (input != null && !input.isEmpty() && result == null)
+                    ? "Matching prefix not found"
+                    : result;
+            System.out.printf("%-20s | %s%n", displayValue, outputValue);
         }
 
         System.out.println("============================================================");

@@ -58,14 +58,15 @@ public final class PrefixTrie {
      * Node in the Trie. isWord indicates end of a prefix.
      */
     static final class TrieNode {
-        final Map<Character, TrieNode> children = new HashMap<>();
+        private Map<Character, TrieNode> children = new HashMap<>();
         boolean isWord = false;
 
         /**
-         * Recursively freezes children nodes to make the Trie immutable.
+         * Replace each node's children map with an immutable copy once construction finishes.
          */
         void freeze() {
-            children.replaceAll((k, v) -> { v.freeze(); return v; });
+            children.values().forEach(TrieNode::freeze);
+            children = Map.copyOf(children);
         }
     }
 }
