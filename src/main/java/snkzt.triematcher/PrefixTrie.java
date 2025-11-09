@@ -22,8 +22,9 @@ public final class PrefixTrie {
         Objects.requireNonNull(prefixes);
         this.root = new TrieNode();
         for (String p : prefixes) {
-            if (p != null && !p.trim().isEmpty()) {
-                insert(p.trim());
+            // PrefixConfigLoader already trims and filters empty strings, but defensive check for direct usage
+            if (p != null && !p.isEmpty()) {
+                insert(p);
             }
         }
         root.freeze(); // make immutable after construction

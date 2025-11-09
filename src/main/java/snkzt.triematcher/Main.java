@@ -2,13 +2,11 @@ package snkzt.triematcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 
 /**
- * Main class for demoing the PrefixMatcher.
+ * Main class for running the PrefixMatcher application.
  * 
  * Supports input via command-line arguments or a test input file.
  * Prefix file and input file paths are currently hard-coded for simplicity.
@@ -19,9 +17,8 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-        // Prefix file path (can be made configurable via env or system properties if needed)
-        Path prefixFile = Path.of("src/main/resources/sample_prefixes.txt");
-        List<String> prefixes = PrefixConfigLoader.loadFromFile(prefixFile);
+        // Using classpath resource so it works both in development and when running from JAR
+        List<String> prefixes = PrefixConfigLoader.loadFromResource("sample_prefixes.txt");
 
         PrefixMatcher matcher = new PrefixMatcher(prefixes);
 
@@ -30,18 +27,28 @@ public class Main {
             // Use command-line arguments if provided
             inputs = List.of(args);
         } else {
-            // Otherwise, read test inputs from file
-            Path inputFile = Path.of("src/main/resources/sample_inputs.txt");
-            if (!Files.exists(inputFile)) {
-                logger.warn("Input file not found: {}", inputFile);
-                throw new RuntimeException("Input file not found: " + inputFile);
+            // Otherwise, read test inputs from classpath resource
+            try {
+                inputs = PrefixConfigLoader.loadFromResource("sample_inputs.txt");
+            } catch (Exception e) {
+                logger.warn("Input file not found: sample_inputs.txt");
+                throw new RuntimeException("Input file not found: sample_inputs.txt", e);
             }
-            inputs = Files.readAllLines(inputFile);
         }
 
+        System.out.println("=================== Prefix Match Results ===================");
+        System.out.printf("%-20s | %s%n", "Input", "Longest Matching Prefix");
+        System.out.println("------------------------------------------------------------");
+
         for (String input : inputs) {
+            // Skip empty strings as they have no meaningful prefix to match
+            if (input == null || input.isEmpty()) {
+                continue;
+            }
             String result = matcher.findLongestPrefix(input);
-            System.out.printf("%s -> %s%n", input, result);
-        }   
+            System.out.printf("%-20s | %s%n", input, result);
+        }
+
+        System.out.println("============================================================");
     }
 }

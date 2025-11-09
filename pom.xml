@@ -5,7 +5,7 @@
 
     <groupId>snkzt.triematcher</groupId>
     <artifactId>trie-prefix-matcher</artifactId>
-   <version>1.0.0</version>
+    <version>1.0.0</version>
     <name>Trie Prefix Matcher</name>
 
     <properties>
@@ -44,10 +44,33 @@
                 <version>3.10.1</version>
             </plugin>
 
+            <!-- Make JAR executable -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>snkzt.triematcher.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- Create fat JAR with dependencies -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
