@@ -40,7 +40,7 @@ However, for the current dataset (~264k prefixes), using a HashMap is sufficient
 ### Extending for more character types
 If prefixes or inputs include punctuation, Unicode, or spaces:
 1. No code change is strictly required (Java `char` supports Unicode).
-2. For large or highly varied Unicode sets, consider normalising inputs with `java.text.Normalizer` or other pre-processing steps, and ensure the data structure (e.g., switching to `TreeMap`) still meets your ordering or performance needs.
+2. For large or highly varied Unicode sets, consider normalising inputs with `java.text.Normalizer` or other pre-processing steps, and ensure the data structure (e.g., switching to `TreeMap`) still meets ordering or performance needs.
 3. For extremely multilingual datasets, review performance (larger branching factor).
 The current PrefixTrie is fully optimised for alphanumeric datasets but can be easily adapted for wider character sets if needed.
 4. The prefix list is loaded from the classpath resource `sample_prefixes.txt` (located in `src/main/resources/` at build time). Both inputs and prefixes are loaded from classpath resources, which works both in development and when running from a JAR. They could be made configurable using environment variables or system properties in a production deployment.
@@ -63,8 +63,8 @@ The current PrefixTrie is fully optimised for alphanumeric datasets but can be e
 
 
 ## Prerequisites
-- **Java 17** or later installed on your system.
-- The project includes the **Maven Wrapper**, so you do **not** need Maven installed globally.
+- **Java 17** or later installed on a user's system.
+- The project includes the **Maven Wrapper**, so there is **no** need of Maven to beinstalled globally.
 
 
 ## Build and Run
@@ -80,13 +80,13 @@ Build an executable JAR with all dependencies included:
 mvnw.cmd -q clean package
 ```
 When to run:
-- Rebuild the JAR whenever you modify the source code. 
+- Rebuild the JAR whenever the source code is modified. 
 - This command:
     - Cleans previous build artifacts
     - Compiles the code
     - Runs all tests
     - Packages everything into `target/trie-prefix-matcher-1.0.0.jar` - a standalone, executable JAR file
-- If you only need to compile without running tests or packaging, you can use `./mvnw compile` instead.
+- If only need to compile without running tests or packaging, `./mvnw compile` is also available.
 
 ### Run all tests
 ```
